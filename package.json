@@ -11,5 +11,8 @@
     "url": "git+https://github.com/kevinsanpedro/fragment.git"
   },
   "author": "kevin san pedro",
-  "license": "UNLICENSED"
+  "license": "UNLICENSED",
+  "devDependencies": {
+    "prettier": "2.6.2"
+  }
 }
