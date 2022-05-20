@@ -6,9 +6,9 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "lint": "eslint --config .eslintrc.js src/**",
-    "start": "node src/server.js",
-    "dev": "cross-env LOG_LEVEL=debug nodemon ./src/server.js --watch src",
-    "debug": "cross-env LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/server.js --watch src"
+    "start": "node src/index.js",
+    "dev": "cross-env LOG_LEVEL=debug nodemon ./src/index.js --watch src",
+    "debug": "cross-env LOG_LEVEL=debug nodemon --inspect=0.0.0.0:9229 ./src/index.js --watch src"
   },
   "repository": {
     "type": "git",
@@ -23,11 +23,14 @@
     "prettier": "2.6.2"
   },
   "dependencies": {
+    "aws-jwt-verify": "^2.1.3",
     "compression": "^1.7.4",
     "cors": "^2.8.5",
     "dotenv": "^16.0.1",
     "express": "^4.18.1",
     "helmet": "^5.0.2",
+    "passport": "^0.5.3",
+    "passport-http-bearer": "^1.0.1",
     "pino": "^7.11.0",
     "pino-http": "^7.0.0",
     "pino-pretty": "^7.6.1",

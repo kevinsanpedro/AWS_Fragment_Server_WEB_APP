@@ -1,7 +1,10 @@
+/* eslint-disable no-unused-vars */
 const express = require('express');
 const cors = require('cors');
 const helmet = require('helmet');
 const compression = require('compression');
+const passport = require('passport');
+const authorization = require('./authorization');
 
 const { version, author } = require('../package.json');
 
@@ -13,6 +16,9 @@ const pino = require('pino-http')({
 
 // Create an express app instance we can use to attach middleware and HTTP routes
 const app = express();
+
+// Use gzip/deflate compression middleware
+app.use(compression());
 
 // Use logging middleware
 app.use(pino);
@@ -26,25 +32,12 @@ app.use(cors());
 // Use gzip/deflate compression middleware
 app.use(compression());
 
+// Set up our passport authorization middleware
+passport.use(authorization.strategy());
+app.use(passport.initialize());
+
 // Define our routes
 app.use('/', require('./routes'));
-
-// // Define a simple health check route. If the server is running
-// // we'll respond with a 200 OK.  If not, the server isn't healthy.
-
-// app.get('/', (req, res) => {
-//   // Clients shouldn't cache this response (always request it fresh)
-//   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
-//   res.setHeader('Cache-Control', 'no-cache');
-
-//   // Send a 200 'OK' response with info about our repo
-//   res.status(200).json({
-//     status: 'ok',
-//     author,
-//     githubUrl: 'https://github.com/kevinsanpedro/fragment.git',
-//     version,
-//   });
-// });
 
 // Add 404 middleware to handle any requests for resources that can't be found can't be found
 app.use((req, res) => {
@@ -81,3 +74,20 @@ app.use((err, req, res, next) => {
 
 // Export our `app` so we can access it in server.js
 module.exports = app;
+
+// // Define a simple health check route. If the server is running
+// // we'll respond with a 200 OK.  If not, the server isn't healthy.
+
+// app.get('/', (req, res) => {
+//   // Clients shouldn't cache this response (always request it fresh)
+//   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
+//   res.setHeader('Cache-Control', 'no-cache');
+
+//   // Send a 200 'OK' response with info about our repo
+//   res.status(200).json({
+//     status: 'ok',
+//     author,
+//     githubUrl: 'https://github.com/kevinsanpedro/fragment.git',
+//     version,
+//   });
+// });
