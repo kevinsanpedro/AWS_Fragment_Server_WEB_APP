@@ -26,22 +26,25 @@ app.use(cors());
 // Use gzip/deflate compression middleware
 app.use(compression());
 
-// Define a simple health check route. If the server is running
-// we'll respond with a 200 OK.  If not, the server isn't healthy.
+// Define our routes
+app.use('/', require('./routes'));
 
-app.get('/', (req, res) => {
-  // Clients shouldn't cache this response (always request it fresh)
-  // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
-  res.setHeader('Cache-Control', 'no-cache');
+// // Define a simple health check route. If the server is running
+// // we'll respond with a 200 OK.  If not, the server isn't healthy.
 
-  // Send a 200 'OK' response with info about our repo
-  res.status(200).json({
-    status: 'ok',
-    author,
-    githubUrl: 'https://github.com/kevinsanpedro/fragment.git',
-    version,
-  });
-});
+// app.get('/', (req, res) => {
+//   // Clients shouldn't cache this response (always request it fresh)
+//   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
+//   res.setHeader('Cache-Control', 'no-cache');
+
+//   // Send a 200 'OK' response with info about our repo
+//   res.status(200).json({
+//     status: 'ok',
+//     author,
+//     githubUrl: 'https://github.com/kevinsanpedro/fragment.git',
+//     version,
+//   });
+// });
 
 // Add 404 middleware to handle any requests for resources that can't be found can't be found
 app.use((req, res) => {
