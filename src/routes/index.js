@@ -1,5 +1,3 @@
-// src/routes/index.js
-
 const express = require('express');
 
 // version and author from package.json
@@ -7,6 +5,9 @@ const { version, author } = require('../../package.json');
 
 // Our authorization middleware
 const { authenticate } = require('../authorization');
+
+//for success message middleware
+const { createSuccessResponse } = require('../response');
 
 // Create a router that we can use to mount our API
 const router = express.Router();
@@ -23,15 +24,13 @@ router.use(`/v1`, authenticate(), require('./api'));
 router.get('/', (req, res) => {
   // Client's shouldn't cache this response (always request it fresh)
   res.setHeader('Cache-Control', 'no-cache');
+  const data = {
+    author: author,
+    githubUrl: 'https://github.com/kevinsanpedro/fragment.git/fragments',
+    version: version,
+  };
 
-  // Send a 200 'OK' response
-  res.status(200).json({
-    status: 'ok',
-    author,
-    // Use your own GitHub URL for this...
-    githubUrl: 'https://github.com/humphd/fragments',
-    version,
-  });
+  res.status(200).send(createSuccessResponse(data));
 });
 
 module.exports = router;
