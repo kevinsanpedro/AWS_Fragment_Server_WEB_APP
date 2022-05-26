@@ -74,20 +74,3 @@ app.use((err, req, res, next) => {
 
 // Export our `app` so we can access it in server.js
 module.exports = app;
-
-// // Define a simple health check route. If the server is running
-// // we'll respond with a 200 OK.  If not, the server isn't healthy.
-
-// app.get('/', (req, res) => {
-//   // Clients shouldn't cache this response (always request it fresh)
-//   // See: https://developer.mozilla.org/en-US/docs/Web/HTTP/Caching#controlling_caching
-//   res.setHeader('Cache-Control', 'no-cache');
-
-//   // Send a 200 'OK' response with info about our repo
-//   res.status(200).json({
-//     status: 'ok',
-//     author,
-//     githubUrl: 'https://github.com/kevinsanpedro/fragment.git',
-//     version,
-//   });
-// });
