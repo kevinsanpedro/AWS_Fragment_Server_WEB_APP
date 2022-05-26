@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // src/authentication.js
 
 // Configure a JWT token strategy for Passport based on
