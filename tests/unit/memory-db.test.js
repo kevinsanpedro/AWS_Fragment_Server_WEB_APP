@@ -17,9 +17,14 @@ describe('memory-db', () => {
   });
 
   test('get() returns what we put() into the db', async () => {
+    //define argument
     const data = { value: 123 };
+    //call asyncfunction, define(or update) the db model with a,b, and data
     await db.put('a', 'b', data);
-    const result = await db.get('a', 'b');
+    // -
+    const result = await db.get('a', 'b'); //primarykey = a, secondarykey = b
+
+    // - expect the result to be equal to the data
     expect(result).toEqual(data);
   });
 
@@ -45,6 +50,7 @@ describe('memory-db', () => {
 
     const results = await db.query('a');
     expect(Array.isArray(results)).toBe(true);
+    console.log(results);
     expect(results).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
   });
 

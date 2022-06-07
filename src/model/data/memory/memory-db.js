@@ -26,11 +26,10 @@ class MemoryDB {
    * @param {string} primaryKey
    * @param {string} secondaryKey
    * @returns Promise<any>
-   */
-
-  /* 
+   * 
     primarykey who owns the data, (e.g. ownerID,or email)
     secondarykey is the ID of the fragments
+  
    */
   get(primaryKey, secondaryKey) {
     if (!(validateKey(primaryKey) && validateKey(secondaryKey))) {
