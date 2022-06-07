@@ -7,12 +7,33 @@ const memoryIndex = require('../../src/model/data/memory/index');
 const MemoryDB = require('../../src/model/data/memory/memory-db');
 
 describe('index', () => {
-  // let dbData;
+  //query
+  test('get list of fragment ids/or object for the given user by user return secondary and delete after', async () => {
+    //defining array data
+    const data1 = { ownerId: 'a', id: 'a', fragment: { value: 1 } };
+    const data2 = { ownerId: 'a', id: 'b', fragment: { value: 2 } };
+    const data3 = { ownerId: 'a', id: 'c', fragment: { value: 3 } };
+    const data4 = { ownerId: 'a', id: 'd', fragment: { value: 4 } };
 
-  // // Each test will get its own, empty database instance
-  // beforeEach(() => {
-  //   dbData = new memoryIndex();
-  // });
+    await memoryIndex.writeFragment(data1);
+    await memoryIndex.writeFragment(data2);
+    await memoryIndex.writeFragment(data3);
+    await memoryIndex.writeFragment(data4);
+
+    //write array list of fragmentData
+    const result = await memoryIndex.listFragments('a');
+    expect(Array.isArray(result)).toBe(true);
+
+    //check if memory index is array
+    expect(result).toEqual(['a', 'b', 'c', 'd']);
+  });
+
+  //query expand to true
+  test('get expand query and, look for undefined primary key', async () => {
+    //write array list of fragmentData
+    const result = await memoryIndex.listFragments('k', true);
+    expect(result).toEqual([undefined]);
+  });
 
   //readFragments
   test('read fragments() return ownerId, and id', async () => {
@@ -36,26 +57,18 @@ describe('index', () => {
 
     //this will return a promise
     await memoryIndex.writeFragmentData('a', 'b', data);
-
     const result = await memoryIndex.readFragmentData('a', 'b');
-
     expect(result).toEqual(data);
   });
 
   //writeFragmentData
-  test('writeFragmentData data return ownerid, id', async () => {
+  test('writeFragmentData data return owners id, and id', async () => {
     const result = await memoryIndex.writeFragmentData('a', 'b', {});
     expect(result).toBe(undefined);
   });
 
-  test('query() returns all owner id with value a', async () => {
-    //write array list of fragmentData
-    const result = await memoryIndex.listFragments('a');
-
-    //check if memory index is array
-    //expect(Array.isArray(result).toBe(true));
-    expect(result).toEqual(['b']);
-    //check if the result is equal to data we write using fragmentData
-    //expect(result).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
+  test('delete() all meta and data from memory db', async () => {
+    await memoryIndex.deleteFragment('a', 'b');
+    expect(await memoryIndex.readFragmentData('a', 'b')).toBe(undefined);
   });
 });

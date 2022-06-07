@@ -50,7 +50,6 @@ describe('memory-db', () => {
 
     const results = await db.query('a');
     expect(Array.isArray(results)).toBe(true);
-    console.log(results);
     expect(results).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
   });
 
@@ -67,7 +66,7 @@ describe('memory-db', () => {
   });
 
   test('get() expects string keys', () => {
-    //if I call get and it doesnt get a string it will throw an error
+    //if I call get and it doesn't get a string it will throw an error
     expect(async () => await db.get()).rejects.toThrow();
     expect(async () => await db.get(1)).rejects.toThrow();
     expect(async () => await db.get(1, 1)).rejects.toThrow();

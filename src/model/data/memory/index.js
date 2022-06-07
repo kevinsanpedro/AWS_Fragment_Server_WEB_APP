@@ -35,7 +35,7 @@ async function listFragments(ownerId, expand = false) {
     return fragments;
   }
 
-  // Otherwise, map to only send back the ids
+  // Otherwise, use map  and only send back the ids (secondary key)
   return fragments.map((fragment) => fragment.id);
 }
 
