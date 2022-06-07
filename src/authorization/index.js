@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 //this will will be used to figure out which of the two strategies to use at runtime, based on our environment variables.
-// src/authorization/index.js
 
+// src/authorization/index.js
 // Prefer Amazon Cognito
 if (process.env.AWS_COGNITO_POOL_ID && process.env.AWS_COGNITO_CLIENT_ID) {
   module.exports = require('./cognito');
