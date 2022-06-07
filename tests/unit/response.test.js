@@ -29,8 +29,11 @@ describe('API Responses', () => {
   test('createSuccessResponse(data)', () => {
     // Data argument included
     const data = { a: 1, b: 2 };
+
+    //call the createSuccessResponse in response.js
     const successResponse = createSuccessResponse(data);
-    // Expect the result to look like the following
+    // - compare the output of createSuccessResponse and must be
+    // - equal to the following
     expect(successResponse).toEqual({
       status: 'ok',
       a: 1,
