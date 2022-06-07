@@ -48,19 +48,14 @@ describe('index', () => {
     expect(result).toBe(undefined);
   });
 
-  // test('query() returns all owner id with value a', async () => {
-  //   write array list of fragmentData
-  //   await memoryIndex.writeFragmentData('a', 'a', { value: 1 });
-  //   await memoryIndex.writeFragmentData('a', 'b', { value: 2 });
-  //   await memoryIndex.writeFragmentData('a', 'c', { value: 3 });
+  test('query() returns all owner id with value a', async () => {
+    //write array list of fragmentData
+    const result = await memoryIndex.listFragments('a');
 
-  //   //
-  //   const result = await memoryIndex.listFragments('a');
-
-  //   //check if memory index is array
-  //   expect(Array.isArray(result).toBe(true));
-  //   console.log(result);
-  //   //check if the result is equal to data we write using fragmentData
-  //   //expect(result).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
-  // });
+    //check if memory index is array
+    //expect(Array.isArray(result).toBe(true));
+    expect(result).toEqual(['b']);
+    //check if the result is equal to data we write using fragmentData
+    //expect(result).toEqual([{ value: 1 }, { value: 2 }, { value: 3 }]);
+  });
 });
