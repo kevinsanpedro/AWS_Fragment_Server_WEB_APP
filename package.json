@@ -16,7 +16,7 @@
     "type": "git",
     "url": "git+https://github.com/kevinsanpedro/fragment.git"
   },
-  "author": "kevin san pedro",
+  "author": "kevin san pedro (kpsanpedro@myseneca.ca)",
   "license": "UNLICENSED",
   "devDependencies": {
     "cross-env": "^7.0.3",
