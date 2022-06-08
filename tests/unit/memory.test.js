@@ -8,7 +8,7 @@ const MemoryDB = require('../../src/model/data/memory/memory-db');
 
 describe('index', () => {
   //query
-  test('get list of fragment ids/or object for the given user by user return secondary and delete after', async () => {
+  test('get list of fragment ids/or object for the given by user return secondary id', async () => {
     //defining array data
     const data1 = { ownerId: 'a', id: 'a', fragment: { value: 1 } };
     const data2 = { ownerId: 'a', id: 'b', fragment: { value: 2 } };
