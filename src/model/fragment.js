@@ -1,6 +1,6 @@
 /* eslint-disable no-undef */
 // Use https://www.npmjs.com/package/nanoid to create unique IDs
-//const { nanoid } = require('nanoid');
+const { nanoid } = require('nanoid');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
 const contentType = require('content-type');
 
@@ -57,9 +57,9 @@ class Fragment {
    * @returns Promise<Fragment>
    */
   static async byId(ownerId, id) {
+    // TODO
     const fragment = await readFragmentData(ownerId, id);
     return Promise.resolve(fragment);
-    // TODO
   }
 
   /**
@@ -88,6 +88,7 @@ class Fragment {
    */
   getData() {
     // TODO
+    return Promise.Buffer();
   }
 
   /**
@@ -97,7 +98,8 @@ class Fragment {
    */
   async setData(data) {
     // TODO
-    writeFragment(data);
+    const buf = Buffer.from(data);
+    writeFragment(buf);
     return Promise.resolve();
   }
 
