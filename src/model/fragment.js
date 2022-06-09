@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 // Use https://www.npmjs.com/package/nanoid to create unique IDs
 const { nanoid } = require('nanoid');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
@@ -57,13 +58,14 @@ class Fragment {
   static async byId(ownerId, id) {
     // TODO
     const result = await readFragment(ownerId, id);
+    if (!result) return Promise.throw();
     return Promise.resolve(result);
   }
 
   /**
    * Delete the user's fragment data and metadata for the given id
    * @param {string} ownerId user's hashed email
-   * @param {string} id fragment's id
+   * @param {string} id fragment's idn
    * @returns Promise
    */
   static delete(ownerId, id) {
@@ -84,7 +86,7 @@ class Fragment {
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
-  //not async
+  //not done
   getData() {
     return readFragmentData(this.ownerId, this.id);
   }
@@ -96,10 +98,10 @@ class Fragment {
    */
   async setData(data) {
     //TO DO
-    const result = data.toString();
-    this.size++;
+    if (!data) return Promise.throw();
+    this.size = Buffer.byteLength(data);
     this.updated = new Date(Date.now()).toISOString();
-    return await writeFragmentData(result, this.id, this.size);
+    return await writeFragmentData(this.ownerId, this.id, data);
   }
 
   /**
@@ -126,8 +128,7 @@ class Fragment {
    */
   get formats() {
     // TODO
-    let str = contentType.format({ type: ['text/plain'] });
-    return str;
+    return contentType.format({ type: ['text/plain'] });
   }
 
   /**
