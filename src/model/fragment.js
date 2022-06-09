@@ -1,4 +1,3 @@
-/* eslint-disable no-undef */
 // Use https://www.npmjs.com/package/nanoid to create unique IDs
 const { nanoid } = require('nanoid');
 // Use https://www.npmjs.com/package/content-type to create/parse Content-Type headers
@@ -11,10 +10,11 @@ const {
   readFragmentData,
   writeFragmentData,
   listFragments,
-  // deleteFragment,
+  deleteFragment,
 } = require('./data');
 
 class Fragment {
+  // eslint-disable-next-line no-unused-vars
   constructor({ id, ownerId, created, updated, type, size = 0 }) {
     let date = new Date(Date.now()).toISOString();
     let error = 0;
@@ -22,7 +22,7 @@ class Fragment {
     if (!ownerId) error++;
     if (!type || !type.includes('text')) error++; //to update
     if (typeof size !== 'number' || size < 0) error++;
-    if (!id) id = 'asdasd'; // to update
+    if (!id) id = nanoid(); // to update
 
     if (error > 0) {
       Promise.throw();
@@ -44,10 +44,8 @@ class Fragment {
    */
   static async byUser(ownerId, expand = false) {
     // TODO
-    //console.log(ownerId);
-    const fragment = await listFragments(ownerId, expand);
-    console.log(fragment);
-    return Promise.resolve(fragment);
+    const result = await listFragments(ownerId, expand);
+    return Promise.resolve(result);
   }
 
   /**
@@ -58,8 +56,8 @@ class Fragment {
    */
   static async byId(ownerId, id) {
     // TODO
-    const fragment = await readFragmentData(ownerId, id);
-    return Promise.resolve(fragment);
+    const result = await readFragment(ownerId, id);
+    return Promise.resolve(result);
   }
 
   /**
@@ -69,7 +67,7 @@ class Fragment {
    * @returns Promise
    */
   static delete(ownerId, id) {
-    // TODO
+    return deleteFragment(ownerId, id);
   }
 
   /**
@@ -78,17 +76,17 @@ class Fragment {
    */
   save() {
     // TODO
-    writeFragment(Fragment);
-    return Promise.resolve();
+    this.updated = new Date(Date.now()).toISOString();
+    return writeFragment(this);
   }
 
   /**
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
+  //not async
   getData() {
-    // TODO
-    return Promise.Buffer();
+    return readFragmentData(this.ownerId, this.id);
   }
 
   /**
@@ -97,10 +95,11 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    // TODO
-    const buf = Buffer.from(data);
-    writeFragment(buf);
-    return Promise.resolve();
+    //TO DO
+    const result = data.toString();
+    this.size++;
+    this.updated = new Date(Date.now()).toISOString();
+    return await writeFragmentData(result, this.id, this.size);
   }
 
   /**
