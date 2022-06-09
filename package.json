@@ -36,7 +36,7 @@
     "helmet": "^5.0.2",
     "http-auth": "^4.1.9",
     "http-auth-passport": "^1.0.6",
-    "nanoid": "^4.0.0",
+    "nanoid": "^3.3.4",
     "passport": "^0.5.3",
     "passport-http-bearer": "^1.0.1",
     "pino": "^7.11.0",
