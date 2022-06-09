@@ -80,8 +80,8 @@ class MemoryDB {
 
     // No matter what, we always return an array (even if empty)
     const db = this.db;
-    const values = db[primaryKey] && Object.values(db[primaryKey]);
-    return Promise.resolve([].concat(values));
+    const values = db[primaryKey] ? Object.values(db[primaryKey]) : [];
+    return Promise.resolve(values);
   }
 
   /**

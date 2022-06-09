@@ -2,9 +2,8 @@
 //test
 //implement test for data/memory/index.js
 const res = require('express/lib/response');
-const { expectCt } = require('helmet');
+
 const memoryIndex = require('../../src/model/data/memory/index');
-const MemoryDB = require('../../src/model/data/memory/memory-db');
 
 describe('index', () => {
   //query
@@ -22,6 +21,7 @@ describe('index', () => {
 
     //write array list of fragmentData
     const result = await memoryIndex.listFragments('a');
+
     expect(Array.isArray(result)).toBe(true);
 
     //check if memory index is array
@@ -58,6 +58,7 @@ describe('index', () => {
     //this will return a promise
     await memoryIndex.writeFragmentData('a', 'b', data);
     const result = await memoryIndex.readFragmentData('a', 'b');
+
     expect(result).toEqual(data);
   });
 
@@ -67,7 +68,7 @@ describe('index', () => {
     expect(result).toBe(undefined);
   });
 
-  test('delete() all meta and data from memory db', async () => {
+  test('delete() from memory db', async () => {
     await memoryIndex.deleteFragment('a', 'b');
     expect(await memoryIndex.readFragmentData('a', 'b')).toBe(undefined);
   });
