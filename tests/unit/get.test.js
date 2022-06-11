@@ -83,19 +83,16 @@ describe('GET /v1/fragments', () => {
     });
   });
 
-  // test('authenticate get by id and get HTML', async () => {
-  //   const res = await request(app)
-  //     .post('/v1/fragments')
-  //     .auth('user1@email.com', 'password1')
-  //     .set('Content-Type', 'text/plain')
-  //     .send('This is a fragment');
+  test('authenticate get by id and get HTML', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('This is a fragment');
 
-  //   const result = await request(app)
-  //     .get(`/v1/fragments/${res.body.id}.html`)
-  //     .auth('user1@email.com', 'password1');
-  //   // expect(result.statusCode).toBe(201);
-  //   // expect(result.text).toEqual('This is a fragment');
-  // });
-
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.id}.html`)
+      .auth('user1@email.com', 'password1');
+  });
   // TODO: we'll need to add tests to check the contents of the fragments array later
 });
