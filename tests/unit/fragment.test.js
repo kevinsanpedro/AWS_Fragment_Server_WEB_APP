@@ -204,6 +204,7 @@ describe('Fragment class', () => {
       const fragment = new Fragment({ ownerId, type: 'text/plain', size: 0 });
       await fragment.save();
       await fragment.setData(data);
+
       expect(await Fragment.byUser(ownerId, true)).toEqual([fragment]);
     });
     test('setData() throws if not give a Buffer', () => {
