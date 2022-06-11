@@ -1,8 +1,5 @@
-const { expectCt } = require('helmet');
 const request = require('supertest');
-
 const app = require('../../src/app');
-const logger = require('../../src/logger');
 
 describe('GET /v1/fragments', () => {
   //If the request is missing the Authorization header, it should be forbidden
@@ -90,7 +87,7 @@ describe('GET /v1/fragments', () => {
       .set('Content-Type', 'text/plain')
       .send('This is a fragment');
 
-    const result = await request(app)
+    await request(app)
       .get(`/v1/fragments/${res.body.id}.html`)
       .auth('user1@email.com', 'password1');
   });

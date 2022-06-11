@@ -1,7 +1,7 @@
 /**
  * Get a list of fragments for the current user
  */
-const { createSuccessResponse, createErrorResponse } = require('../../response');
+const { createSuccessResponse } = require('../../response');
 const { Fragment } = require('../../model//fragment');
 const logger = require('../../logger');
 
