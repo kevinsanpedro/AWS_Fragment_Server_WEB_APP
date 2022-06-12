@@ -16,7 +16,6 @@ module.exports = async (req, res, next) => {
 
     //location header is to locate where we put the fragments in the system
     //change process.env.api_url for aws server
-    //res.location(`${process.env.API_URL}/v1/fragments/${fragment.id}`);
 
     res.set('location', `${process.env.API_URL}/v1/fragments/${fragment.id}`);
     res.status(201).send(createSuccessResponse(result));
