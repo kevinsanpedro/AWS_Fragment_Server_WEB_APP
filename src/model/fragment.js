@@ -15,8 +15,7 @@ const {
 } = require('./data');
 
 class Fragment {
-  // eslint-disable-next-line no-unused-vars
-  constructor({ id, ownerId, created, updated, type, size = 0 }) {
+  constructor({ id, ownerId, type, size = 0 }) {
     let date = new Date(Date.now()).toISOString();
     let error = 0;
 
@@ -26,7 +25,7 @@ class Fragment {
     if (!id) id = nanoid(); // to update
 
     if (error > 0) {
-      Promise.throw();
+      throw new Error('Error creating fragment data');
     } else {
       this.ownerId = ownerId;
       this.id = id;
@@ -46,7 +45,7 @@ class Fragment {
   static async byUser(ownerId, expand = false) {
     // TODO
     const result = await listFragments(ownerId, expand);
-    return Promise.resolve(result);
+    return result;
   }
 
   /**
@@ -99,7 +98,7 @@ class Fragment {
   async setData(data) {
     //TO DO
     if (!data) return Promise.throw();
-    this.size = Buffer.byteLength(data);
+    this.size = Buffer.byteLength(data); //change this
     this.updated = new Date(Date.now()).toISOString();
     return await writeFragmentData(this.ownerId, this.id, data);
   }

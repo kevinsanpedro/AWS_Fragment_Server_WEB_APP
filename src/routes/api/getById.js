@@ -17,8 +17,6 @@ module.exports = async (req, res) => {
       result = await fragment.getData();
       res.setHeader('Content-Type', `'text/${query[1]}`);
       result = result.toString();
-      // let parser = new DOMParser();
-      // let floatingElement = parser.parseFromString(result, 'text/html');
       res.status(200).send(result);
     } else {
       fragment = await Fragment.byId(req.user, req.params.id);
