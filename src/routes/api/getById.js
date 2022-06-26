@@ -4,8 +4,10 @@
 const { createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model//fragment');
 const path = require('node:path');
-var MarkdownIt = require('markdown-it'),
-  md = new MarkdownIt();
+
+//disable markdown - used to convert text to html
+// var MarkdownIt = require('markdown-it'),
+//   md = new MarkdownIt();
 
 module.exports = async (req, res) => {
   let fragment;
