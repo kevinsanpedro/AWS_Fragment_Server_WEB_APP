@@ -10,7 +10,7 @@
 module.exports.createSuccessResponse = function (data) {
   return {
     status: 'ok',
-    ...data, //... is the spread operator this will clode the data in the object
+    ...data, //... is the spread operator this will spread the data in the object
   };
 };
 
