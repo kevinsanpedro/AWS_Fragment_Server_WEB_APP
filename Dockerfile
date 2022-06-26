@@ -1,5 +1,5 @@
 #use node version 16.15.0
-FROM node:16.15.0
+FROM node:16.15.0 AS dependencies
 
 LABEL maintainer="kevin san pedro <kpsanpedro@myseneca.ca>" 
 LABEL description="Fragments node.js microservice"
@@ -21,14 +21,12 @@ WORKDIR /app
 # Copy the package.json and package-lock.json files into /app
 COPY package*.json /app/
 
-# Copy the package.json and package-lock.json files into the working dir (/app)
-COPY package*.json ./
-
-# Copy the package.json and package-lock.json files into the working dir (/app)
-COPY package.json package-lock.json ./
-
 # Install node dependencies defined in package-lock.json
-RUN npm install
+# using --mount=type=cache,target=/root/.npm,id=npm will help to increase the rebuild layer (building) was 10s to 4.8s
+# using npm ci instead of npm install, it increase the speed and save a space 
+# using npm cache clean to force it to clean out npm cache this will give extra space
+RUN --mount=type=cache,target=/root/.npm,id=npm npm ci && \
+npm cache clean --force
 
 # Copy src to /app/src/
 COPY ./src ./src
@@ -37,9 +35,12 @@ COPY ./src ./src
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
 # Start the container by running our server
-CMD npm start
+CMD npm run dev
 
 # We run our service on port 8080
 EXPOSE 8080
+
+#health check
+HEALTHCHECK --interval=10s --timeout=30s --start-period=5s --retries=3 CMD  curl --fail localhost:8080 || exit 1 
 
 
