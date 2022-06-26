@@ -8,10 +8,11 @@ const wait = async (ms = 10) => new Promise((resolve) => setTimeout(resolve, ms)
 // eslint-disable-next-line no-unused-vars
 const validTypes = [
   `text/plain`,
+  //`text/html`,
   /*
    Currently, only text/plain is supported. Others will be added later.
   `text/markdown`,
-  `text/html`,
+
   `application/json`,
   `image/png`,
   `image/jpeg`,
