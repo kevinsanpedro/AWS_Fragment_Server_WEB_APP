@@ -14,6 +14,21 @@ const {
   deleteFragment,
 } = require('./data');
 
+const validTypes = [
+  `text/plain`,
+  'text/plain; charset=utf-8',
+  `text/html`,
+  // `text/markdown`,
+  /*
+   Currently, only text/plain is supported. Others will be added later.
+
+  `application/json`,
+  `image/png`,
+  `image/jpeg`,
+  `image/webp`,
+  `image/gif`,
+  */
+];
 class Fragment {
   constructor({ id, ownerId, type, size = 0 }) {
     let date = new Date(Date.now()).toISOString();
@@ -27,12 +42,12 @@ class Fragment {
     if (error > 0) {
       throw new Error('Error creating fragment data');
     } else {
-      this.ownerId = ownerId;
       this.id = id;
-      this.type = type;
-      this.size = size;
       this.created = date;
       this.updated = date;
+      this.ownerId = ownerId;
+      this.type = type;
+      this.size = size;
     }
   }
 
@@ -57,8 +72,8 @@ class Fragment {
   static async byId(ownerId, id) {
     // TODO
     const result = await readFragment(ownerId, id);
-    if (!result) return Promise.throw();
-    return Promise.resolve(result);
+    if (!result) throw new Error();
+    return result;
   }
 
   /**
@@ -96,9 +111,8 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    //TO DO
     if (!data) return Promise.throw();
-    this.size = Buffer.byteLength(data); //change this
+    this.size = Buffer.byteLength(data);
     this.updated = new Date(Date.now()).toISOString();
     return await writeFragmentData(this.ownerId, this.id, data);
   }
@@ -126,7 +140,6 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    // TODO
     return contentType.format({ type: ['text/plain'] });
   }
 
@@ -136,7 +149,8 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    return value.includes('text');
+    //check if the value type are included in valid type
+    return validTypes.includes(value);
   }
 }
 
