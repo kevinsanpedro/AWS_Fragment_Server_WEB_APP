@@ -14,21 +14,6 @@ const {
   deleteFragment,
 } = require('./data');
 
-const validTypes = [
-  `text/plain`,
-  'text/plain; charset=utf-8',
-  `text/html`,
-  // `text/markdown`,
-  /*
-   Currently, only text/plain is supported. Others will be added later.
-
-  `application/json`,
-  `image/png`,
-  `image/jpeg`,
-  `image/webp`,
-  `image/gif`,
-  */
-];
 class Fragment {
   constructor({ id, ownerId, type, size = 0 }) {
     let date = new Date(Date.now()).toISOString();
@@ -100,7 +85,6 @@ class Fragment {
    * Gets the fragment's data from the database
    * @returns Promise<Buffer>
    */
-  //not done
   getData() {
     return readFragmentData(this.ownerId, this.id);
   }
@@ -149,6 +133,7 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
+    const validTypes = [`text/plain`, 'text/plain; charset=utf-8', `text/html`];
     //check if the value type are included in valid type
     return validTypes.includes(value);
   }
