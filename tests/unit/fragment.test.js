@@ -155,6 +155,15 @@ describe('Fragment class', () => {
       });
       expect(fragment.formats).toEqual(['text/plain']);
     });
+
+    test('formats returns the expected result for markdown text', () => {
+      const fragment = new Fragment({
+        ownerId: '1234',
+        type: 'text/markdown',
+        size: 0,
+      });
+      expect(fragment.formats).toEqual(['text/plain', 'text/html', 'text/markdown']);
+    });
   });
 
   describe('save(), getData(), setData(), byId(), byUser(), delete()', () => {
