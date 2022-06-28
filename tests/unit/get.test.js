@@ -36,7 +36,7 @@ describe('GET /v1/fragments', () => {
     const res = await request(app)
       .post('/v1/fragments')
       .auth('user1@email.com', 'password1')
-      .set('Content-Type', 'text/plain')
+      .set('Content-Type', 'text/markdown')
       .send('This is a fragment');
 
     const result = await request(app)
