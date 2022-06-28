@@ -76,7 +76,6 @@ class Fragment {
    * @returns Promise
    */
   save() {
-    // TODO
     this.updated = new Date(Date.now()).toISOString();
     return writeFragment(this);
   }
@@ -116,7 +115,7 @@ class Fragment {
    * @returns {boolean} true if fragment's type is text/*
    */
   get isText() {
-    return this.mimeType.includes('text');
+    return this.mimeType.startsWith('text');
   }
 
   /**
@@ -124,7 +123,26 @@ class Fragment {
    * @returns {Array<string>} list of supported mime types
    */
   get formats() {
-    return contentType.format({ type: ['text/plain'] });
+    let mimeArray = [];
+    //check if the fragment type include text
+    // -if plain return plain
+    // -if html return plain and html
+    // -if markdown return plain, html and markdown
+
+    if (this.type.includes('plain')) {
+      mimeArray.push(this.mimeType);
+    }
+    if (this.type.includes('html')) {
+      mimeArray.push('text/plain');
+      mimeArray.push(this.mimeType);
+    }
+    if (this.type.includes('markdown')) {
+      mimeArray.push('text/plain');
+      mimeArray.push('text/html');
+      mimeArray.push(this.mimeType);
+    }
+
+    return mimeArray;
   }
 
   /**
@@ -133,8 +151,8 @@ class Fragment {
    * @returns {boolean} true if we support this Content-Type (i.e., type/subtype)
    */
   static isSupportedType(value) {
-    const validTypes = [`text/plain`, 'text/plain; charset=utf-8', `text/html`];
     //check if the value type are included in valid type
+    const validTypes = [`text/plain`, 'text/plain; charset=utf-8', `text/html`, 'text/markdown'];
     return validTypes.includes(value);
   }
 }
