@@ -128,7 +128,6 @@ class Fragment {
     // -if plain return plain
     // -if html return plain and html
     // -if markdown return plain, html and markdown
-
     if (this.type.includes('plain')) {
       mimeArray.push(this.mimeType);
     }
