@@ -119,9 +119,9 @@ on:
       # Any tag starting with v... should trigger this workflow.
       - 'v**'
 
-jobs:
   # NOTE: this assumes our CI jobs have already passed previously
   # (i.e., that we don't tag a commit manually until we know a build is working)
+jobs:
   aws:
     name: AWS
     runs-on: ubuntu-latest
