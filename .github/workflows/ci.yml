@@ -63,7 +63,7 @@ jobs:
   docker-hub:
     name: Build and Push to Docker Hub
     # Don't bother running this job unless the other three all pass
-    #needs: [lint, dockerfile-lint, unit-tests]
+    needs: [lint, dockerfile-lint, unit-tests]
     runs-on: ubuntu-latest
     steps:
       # Set up buildx for optimal Docker Builds, see:
