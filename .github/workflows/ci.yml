@@ -79,7 +79,8 @@ docker-hub:
       username: ${{ secrets.DOCKERHUB_USERNAME }}
       password: ${{ secrets.DOCKERHUB_TOKEN }}
 
-    # Build and Push an Image to Docker Hub
+
+  # Build and Push an Image to Docker Hub
   - name: Build and push
     env:
       # Define an Environment Variable with our Docker Hub Repo
