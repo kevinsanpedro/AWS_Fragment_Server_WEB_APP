@@ -51,7 +51,10 @@ COPY ./src ./src
 # Copy our HTPASSWD file
 COPY ./tests/.htpasswd ./tests/.htpasswd
 
-CMD npm run dev
+RUN APK install dumb-init
+
+CMD ["start", "server.js"]
+#CMD npm start server.js
 
 # We run our service on port 8080
 EXPOSE 8080
