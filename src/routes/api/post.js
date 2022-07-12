@@ -8,7 +8,6 @@ module.exports = async (req, res) => {
     if (req.body.length === undefined) {
       throw new Error('not supported');
     }
-
     const fragment = new Fragment({
       ownerId: req.user,
       type: req.get('Content-type'),
@@ -16,11 +15,12 @@ module.exports = async (req, res) => {
     });
     //save the fragment
     await fragment.save();
+
     //save a raw binary data
     await fragment.setData(req.body);
 
     //set the location where it will
-    //then send a respawn with fragment meta data
+    //then send a response with fragment meta data
     res
       .set('location', `${process.env.API_URL}/v1/fragments/${fragment.id}`)
       .send(createSuccessResponse({ fragment }));
