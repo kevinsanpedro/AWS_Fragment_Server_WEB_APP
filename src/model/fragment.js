@@ -20,7 +20,7 @@ class Fragment {
     let error = 0;
 
     if (!ownerId) error++;
-    if (!type) error++; //to update
+    if (!type || !type.startsWith('text/') || type === 'application.json') error++;
     if (typeof size !== 'number' || size < 0) error++;
     if (!id) id = nanoid(); // to update
 

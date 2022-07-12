@@ -7,7 +7,6 @@ module.exports = async (req, res) => {
     const fragmentId = path.basename(req.params.id, convertExt); // return fragmentId
 
     if (fragmentId) {
-      console.log('asdasdasdasd', fragmentId);
       const fragment = await Fragment.byId(req.user, req.params.id);
       res.status(200).send(createSuccessResponse({ fragment: fragment }));
     }
