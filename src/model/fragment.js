@@ -20,7 +20,7 @@ class Fragment {
     let error = 0;
 
     if (!ownerId) error++;
-    if (!type || !type.includes('text')) error++; //to update
+    if (!type) error++; //to update
     if (typeof size !== 'number' || size < 0) error++;
     if (!id) id = nanoid(); // to update
 
@@ -94,7 +94,6 @@ class Fragment {
    * @returns Promise
    */
   async setData(data) {
-    if (!data) return Promise.throw();
     this.size = Buffer.byteLength(data);
     this.updated = new Date(Date.now()).toISOString();
     return await writeFragmentData(this.ownerId, this.id, data);
@@ -151,7 +150,13 @@ class Fragment {
    */
   static isSupportedType(value) {
     //check if the value type are included in valid type
-    const validTypes = [`text/plain`, 'text/plain; charset=utf-8', `text/html`, 'text/markdown'];
+    const validTypes = [
+      `text/plain`,
+      'text/plain; charset=utf-8',
+      `text/html`,
+      'text/markdown',
+      'application/json',
+    ];
     return validTypes.includes(value);
   }
 }
