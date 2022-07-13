@@ -20,9 +20,9 @@ class Fragment {
     let error = 0;
 
     if (!ownerId) error++;
-    if (!type || !type.startsWith('text/') || type === 'application.json') error++;
+    if (!Fragment.isSupportedType(type)) error++;
     if (typeof size !== 'number' || size < 0) error++;
-    if (!id) id = nanoid(); // to update
+    if (!id) id = nanoid(); //will  generate id
 
     if (error > 0) {
       throw new Error('Error creating fragment data');
