@@ -63,7 +63,7 @@ EXPOSE 8080
 #start-period this is long for the container first booting up how long to wait 
 #retries how many times it will try doing the health check before it gives up
 #CMD  curl --fail localhost:8080 || exit 1  if localhost doesnt responce with a 200 it will exit code 1
-##HEALTHCHECK --interval=240s --timeout=20s --start-period=240s --retries=2 \ 
-CMD  curl --fail localhost:8080 || exit 1 
+# HEALTHCHECK --interval=240s --timeout=20s --start-period=240s --retries=2 \ 
+# CMD  curl --fail localhost:8080 || exit 1 
 
 
