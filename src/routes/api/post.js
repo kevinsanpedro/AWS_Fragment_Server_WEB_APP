@@ -23,6 +23,7 @@ module.exports = async (req, res) => {
     //then send a response with fragment meta data
     res
       .set('location', `${process.env.API_URL}/v1/fragments/${fragment.id}`)
+      .status(201)
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
     if (Error.message)
