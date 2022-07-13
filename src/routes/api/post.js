@@ -5,8 +5,8 @@ const { Fragment } = require('../../model//fragment');
 module.exports = async (req, res) => {
   try {
     //check if the obj is empty
-    if (req.body.length === undefined) {
-      throw new Error('not supported');
+    if (!Fragment.isSupportedType(req.get('Content-type'))) {
+      throw new Error('Not supported');
     }
     const fragment = new Fragment({
       ownerId: req.user,
@@ -25,7 +25,7 @@ module.exports = async (req, res) => {
       .set('location', `${process.env.API_URL}/v1/fragments/${fragment.id}`)
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
-    if (Error.message === 'not supported')
+    if (Error.message)
       res.status(415).send(createErrorResponse(415, 'Content type is not supported'));
     else res.status(500).send(createErrorResponse(500, Error));
   }
