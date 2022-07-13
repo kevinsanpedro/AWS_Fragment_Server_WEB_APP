@@ -47,6 +47,93 @@ describe('GET /v1/fragments', () => {
     expect(result.text).toEqual('This is a fragment');
   });
 
+  test('convert html type to plain txt', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/html')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}.txt`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(200);
+    expect(result.text).toEqual('This is a fragment');
+  });
+
+  test('convert markdown to html', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}.html`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('convert json to text/plain', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}.txt`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(200);
+    expect(result.text).toEqual('This is a fragment');
+  });
+
+  test('convert text/markdown to text/markdown', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}.md`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(200);
+    expect(result.text).toEqual('This is a fragment');
+  });
+
+  test('convert text/plain to text/markdown unsupported type', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}.md`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(415);
+  });
+
+  test('getting id with wrong info', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .get(`/v1/fragments/${res.body.fragment.id}asd/info`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(404);
+  });
+
   test('get by invalid id ', async () => {
     await request(app)
       .post('/v1/fragments')
