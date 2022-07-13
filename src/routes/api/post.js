@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const { createSuccessResponse, createErrorResponse } = require('../../response');
 const { Fragment } = require('../../model//fragment');
-
+const apiUrl = process.env.API_URL || 'http://localhost:8080';
 module.exports = async (req, res) => {
   try {
     //check if the obj is empty
@@ -22,7 +22,7 @@ module.exports = async (req, res) => {
     //set the location where it will
     //then send a response with fragment meta data
     res
-      .set('location', `${process.env.API_URL}/v1/fragments/${fragment.id}`)
+      .set('location', `${apiUrl}/v1/fragments/${fragment.id}`)
       .status(201)
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
