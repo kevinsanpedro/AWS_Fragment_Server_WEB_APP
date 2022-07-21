@@ -1,14 +1,28 @@
 # Fragment <br/>
 
-Fragment is the Back-end application (or server) this will handle the HTTP request <br/>
+The Fragment application will act as a server, whenever user create an HTTP request for GET, POST, PUT, and DELETE for fragment data together with Fragment-UI (https://github.com/kevinsanpedro/fragments-ui) or Using Curl
 
-After Downloading the code to install necesarry framework used
+HTTP request
 
-- npm init <br />
-  or
-- npm ci for clean slate <br/>
+- GET
+  - GET by Fragment ID
+  - GET with full information
+  - GET by
+- POST
+- PUT
+- delete
 
-To run local application Used Command: <br/>
+File requirment
+
+- .env for authentication
+- .htpasswd under tests unit
+
+Installation requirment to run in the local host
+
+- install node
+- npm ci or npm i
+
+Command to run in Visual Studio code<br/>
 
 - npm start <br />
 - npm run dev <br />
