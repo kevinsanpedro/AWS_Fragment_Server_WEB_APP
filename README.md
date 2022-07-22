@@ -25,11 +25,11 @@ Installation requirment to run in the local host
 Command to run in VS code<br/>
 
 - npm start <br />
-- npm run dev <br />
+- npm run dev <br /> - automatically rerun the code, whenever we save something in the file
 - npm run debug <br />
 
 Command to test in VS code<br/>
 
-- npm test
-- npm run test:watch - this will allow rerun the application everytime we save something in the file
-- npm run coverage
+- npm test - basic test run
+- npm run test:watch - automatically rerun the code, whenever we save something in the file
+- npm run coverage - show complete table for test. describing the percentage of tests, and what line were run
