@@ -1,10 +1,43 @@
 # docker-compose.yml
 services:
   fragments:
-    image: kevin9806/fragments:latest
+    image: ${DOCKER_REPO}:${DOCKER_TAG}
     init: true
     ports:
       - '80:8080'
     environment:
       - NODE_ENV=production
       - HTPASSWD_FILE=tests/.htpasswd
+
+      # We need to create a new compose file to deploy to Elastic Beanstalk, and
+      # it needs to include our updated Docker image info (e.g., the tag we
+      # just pushed). We'll substitute environment variables to create a new
+      # file using the `envsubst` command, see:
+      # https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
+      - name: Create compose file with specific Docker image info
+        env:
+          # Define the variables we need to replace
+          DOCKER_REPO: ${{ steps.login-ecr.outputs.registry }}/fragments
+          DOCKER_TAG: ${{ github.ref_name }}
+          COMPOSE_FILE: deploy-${{ github.ref_name }}.yml
+        run: |
+          envsubst < docker-compose.yml > ${{ env.COMPOSE_FILE }}
+          echo "Created ${{ env.COMPOSE_FILE }}"
+
+      # Deploy our custom compose file to our Elastic Beanstalk environment
+      - name: Deploy to Elastic Beanstalk
+        env:
+          VERSION: ${{ github.ref_name }}
+          COMPOSE_FILE: deploy-${{ github.ref_name }}.yml
+        uses: einaregilsson/beanstalk-deploy@v20
+        with:
+          aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
+          region: us-east-1
+          # Make sure this matches your Elastic Beanstalk application name
+          application_name: fragments
+          # Make sure this matches your Elastic Beanstalk environment name
+          environment_name: fragments-env
+          version_label: ${{ env.VERSION }}
+          deployment_package: ${{ env.COMPOSE_FILE }}
