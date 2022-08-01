@@ -25,83 +25,40 @@ jobs:
   aws:
     name: AWS
     runs-on: ubuntu-latest
-    steps:
-      - name: Check out code
-        uses:
-          actions/checkout@v2
-
-          # Use buildx, which is faster and can optimize the build steps
-      - name: Set up Docker Buildx
-        uses: docker/setup-buildx-action@v1
-
-      # NOTE: ending and restarting the Learner Lab will void these secrets,
-      # update them if you are doing this during a new session:
-      # `Error: The security token included in the request is expired`
-      - name: Configure AWS Credentials using Secrets
+steps:
+    # NOTE: ending and restarting the Learner Lab will void these secrets,
+    # update them if you are doing this during a new session:
+    # `Error: The security token included in the request is expired`
+    - name: Configure AWS Credentials using Secrets
         uses: aws-actions/configure-aws-credentials@v1
         with:
-          # Use our GitHub Encrypted Secrets via secrets.*
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
-          # Hard-code our region, which isn't a secret, and won't change
-          aws-region: us-east-1
+        # Use our GitHub Encrypted Secrets via secrets.*
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-session-token: ${{ secrets.AWS_SESSION_TOKEN }}
+        # Hard-code our region, which isn't a secret, and won't change
+        aws-region: us-east-1
 
-      # Login to our ECR repository using the configured credentials
-      - name: Login to Amazon ECR
+    # Login to our ECR repository using the configured credentials
+    - name: Login to Amazon ECR
         id: login-ecr
         uses: aws-actions/amazon-ecr-login@v1
 
-      # Build and Push an Image to Amazon ECR
-      - name: Build and push to Amazon ECR
+    # Build and Push an Image to Amazon ECR
+    - name: Build and push to Amazon ECR
         env:
-          # Define an Environment Variable with our ECR Registry, getting
-          # the value from the previous step's outputs
-          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          # Define an Environment Variable with our ECR Repository Name
-          ECR_REPO: fragments
-          # We'll give this image two different tags. First, we'll use the git tag (vX.Y.Z)
-          # so that we can always go back and re-create this setup again in the future
-          # if we have to test or debug something. Second, we'll also replace the
-          # `latest` tag, since this is our most up-to-date version.
-          VERSION_TAG: ${{ github.ref_name }}
+        # Define an Environment Variable with our ECR Registry, getting
+        # the value from the previous step's outputs
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        # Define an Environment Variable with our ECR Repository Name
+        ECR_REPO: fragments
+        # We'll give this image two different tags. First, we'll use the git tag (vX.Y.Z)
+        # so that we can always go back and re-create this setup again in the future
+        # if we have to test or debug something. Second, we'll also replace the
+        # `latest` tag, since this is our most up-to-date version.
+        VERSION_TAG: ${{ github.ref_name }}
         uses: docker/build-push-action@v2
         with:
           push: true
           # Use the git tag version and `latest`
           tags: ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:${{ env.VERSION_TAG }}, ${{ env.ECR_REGISTRY }}/${{ env.ECR_REPO }}:latest
-
-
-        # We need to create a new compose file to deploy to Elastic Beanstalk, and
-        # it needs to include our updated Docker image info (e.g., the tag we
-        # just pushed). We'll substitute environment variables to create a new
-        # file using the `envsubst` command, see:
-        # https://www.gnu.org/software/gettext/manual/html_node/envsubst-Invocation.html
-        - name: Create compose file with specific Docker image info
-          env:
-            # Define the variables we need to replace
-            DOCKER_REPO: ${{ steps.login-ecr.outputs.registry }}/fragments
-            DOCKER_TAG: ${{ github.ref_name }}
-            COMPOSE_FILE: deploy-${{ github.ref_name }}.yml
-          run: |
-            envsubst < docker-compose.yml > ${{ env.COMPOSE_FILE }}
-            echo "Created ${{ env.COMPOSE_FILE }}"
-
-      
-        # Deploy our custom compose file to our Elastic Beanstalk environment
-        - name: Deploy to Elastic Beanstalk
-          env:
-            VERSION: ${{ github.ref_name }}
-            COMPOSE_FILE: deploy-${{ github.ref_name }}.yml
-          uses: einaregilsson/beanstalk-deploy@v20
-          with:
-            aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws_session_token: ${{ secrets.AWS_SESSION_TOKEN }}
-            region: us-east-1
-            # Make sure this matches your Elastic Beanstalk application name
-            application_name: fragments
-            # Make sure this matches your Elastic Beanstalk environment name
-            environment_name: fragments-env
-            version_label: ${{ env.VERSION }}
-            deployment_package: ${{ env.COMPOSE_FILE }}
