@@ -6,7 +6,7 @@ const MemoryDB = require('../memory/memory-db');
 
 //
 const s3Client = require('./s3Client');
-const { PutObjectCommand, GetObjectCommand } = require('@aws-sdk/client-s3');
+const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const logger = require('../../../logger');
 
 // Create two in-memory databases: one for fragment metadata and the other for raw data
