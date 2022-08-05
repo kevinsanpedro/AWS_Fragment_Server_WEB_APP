@@ -13,3 +13,7 @@ services:
       - AWS_COGNITO_POOL_ID
       - AWS_COGNITO_CLIENT_ID
       - HTPASSWD
+      # We'll forward Elastic Beanstalk Environment's URL
+      - API_URL
+      # The S3 Bucket to use, default to `fragments` if missing
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-fragments}
