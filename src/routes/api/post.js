@@ -26,8 +26,7 @@ module.exports = async (req, res) => {
       .status(201)
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
-    if (Error.message)
-      res.status(415).send(createErrorResponse(415, 'Content type is not supported'));
+    if (Error.message) res.status(415).send(createErrorResponse(415, Error.message));
     else res.status(500).send(createErrorResponse(500, Error));
   }
 };
