@@ -23,16 +23,6 @@ function readFragment(ownerId, id) {
   return metadata.get(ownerId, id);
 }
 
-// // Write a fragment's data to memory db. Returns a Promise
-// function writeFragmentData(ownerId, id, value) {
-//   return data.put(ownerId, id, value);
-// }
-
-// // Read a fragment's data from memory db. Returns a Promise
-// function readFragmentData(ownerId, id) {
-//   return data.get(ownerId, id);
-// }
-
 // Writes a fragment's data to an S3 Object in a Bucket
 // https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/s3-example-creating-buckets.md#upload-an-existing-object-to-an-amazon-s3-bucket
 async function writeFragmentData(ownerId, id, data) {
