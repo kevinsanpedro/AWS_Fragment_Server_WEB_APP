@@ -1,9 +1,13 @@
 /* eslint-disable no-undef */
 const { createSuccessResponse, createErrorResponse } = require('../../response');
-const { Fragment } = require('../../model//fragment');
+const { Fragment } = require('../../model/fragment');
 const apiUrl = process.env.API_URL || 'http://localhost:8080';
 module.exports = async (req, res) => {
   try {
+    //check if the obj is empty
+    if (!Fragment.isSupportedType(req.get('Content-type'))) {
+      throw new Error('Not supported');
+    }
     const fragment = new Fragment({
       ownerId: req.user,
       type: req.get('Content-type'),
@@ -22,7 +26,7 @@ module.exports = async (req, res) => {
       .status(201)
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
-    if (Error.message) res.status(415).send(createErrorResponse(415, Error.message + 'asd'));
+    if (Error.message) res.status(415).send(createErrorResponse(415, Error.message));
     else res.status(500).send(createErrorResponse(500, Error));
   }
 };
