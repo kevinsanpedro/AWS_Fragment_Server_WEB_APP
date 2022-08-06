@@ -2,9 +2,9 @@
 /* eslint-disable no-undef */
 //what to do https://youtu.be/U5img3xL_Bg?t=1757
 //implementation
-
-// XXX: temporary use of memory-db until we add DynamoDB
 const MemoryDB = require('../memory/memory-db');
+
+//
 const s3Client = require('./s3Client');
 const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aws-sdk/client-s3');
 const logger = require('../../../logger');
@@ -22,6 +22,16 @@ function writeFragment(fragment) {
 function readFragment(ownerId, id) {
   return metadata.get(ownerId, id);
 }
+
+// // Write a fragment's data to memory db. Returns a Promise
+// function writeFragmentData(ownerId, id, value) {
+//   return data.put(ownerId, id, value);
+// }
+
+// // Read a fragment's data from memory db. Returns a Promise
+// function readFragmentData(ownerId, id) {
+//   return data.get(ownerId, id);
+// }
 
 // Writes a fragment's data to an S3 Object in a Bucket
 // https://github.com/awsdocs/aws-sdk-for-javascript-v3/blob/main/doc_source/s3-example-creating-buckets.md#upload-an-existing-object-to-an-amazon-s3-bucket

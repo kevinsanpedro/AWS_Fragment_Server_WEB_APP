@@ -5,9 +5,9 @@ const apiUrl = process.env.API_URL || 'http://localhost:8080';
 module.exports = async (req, res) => {
   try {
     //check if the obj is empty
-    // if (!Fragment.isSupportedType(req.get('Content-type'))) {
-    //   throw new Error('Not supported');
-    // }
+    if (!Fragment.isSupportedType(req.get('Content-type'))) {
+      throw new Error('Not supported');
+    }
     const fragment = new Fragment({
       ownerId: req.user,
       type: req.get('Content-type'),
@@ -27,7 +27,7 @@ module.exports = async (req, res) => {
       .send(createSuccessResponse({ fragment }));
   } catch (Error) {
     if (Error.message)
-      res.status(415).send(createErrorResponse(415, 'Content type is not supported demo'));
+      res.status(415).send(createErrorResponse(415, 'Content type is not supported'));
     else res.status(500).send(createErrorResponse(500, Error));
   }
 };
