@@ -54,7 +54,7 @@ async function writeFragmentData(ownerId, id, data) {
     // If anything goes wrong, log enough info that we can debug
     const { Bucket, Key } = params;
     logger.error({ err, Bucket, Key }, 'Error uploading fragment data to S3');
-    throw new Error('unable to upload fragment data');
+    throw new Error({ err, Bucket, Key }, 'unable to upload fragment data');
   }
 }
 
