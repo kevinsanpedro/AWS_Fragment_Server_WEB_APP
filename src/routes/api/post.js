@@ -14,7 +14,7 @@ module.exports = async (req, res) => {
       size: req.body.length,
     });
     //save the fragment
-    await fragment.save();
+    //await fragment.save();
 
     //save a raw binary data
     await fragment.setData(req.body);
