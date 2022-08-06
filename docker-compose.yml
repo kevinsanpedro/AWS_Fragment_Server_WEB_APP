@@ -9,7 +9,14 @@ services:
       - NODE_ENV=production
       # Use whatever LOG_LEVEL is set to, or `info` as a default if not set
       - LOG_LEVEL=${LOG_LEVEL:-info}
+      # Default to use `us-east-1`, which will also pick the AWS data backend
+      - AWS_REGION=us-east-1
       # Allow the following variables to be forwarded into the container from the env if set
       - AWS_COGNITO_POOL_ID
       - AWS_COGNITO_CLIENT_ID
+      # We'll typically want to use Cognito, but we can pass this instead for testing
       - HTPASSWD
+      # We'll forward Elastic Beanstalk Environment's URL
+      - API_URL
+      # The S3 Bucket to use, default to `fragments` if missing
+      - AWS_S3_BUCKET_NAME=${AWS_S3_BUCKET_NAME:-fragments}
