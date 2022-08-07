@@ -11,6 +11,10 @@ const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aw
 const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const logger = require('../../../logger');
 
+// Create two in-memory databases: one for fragment metadata and the other for raw data
+const data = new MemoryDB();
+const metadata = new MemoryDB();
+
 // // Write a fragment's metadata to memory db. Returns a Promise
 // function writeFragment(fragment) {
 //   return metadata.put(fragment.ownerId, fragment.id, fragment);
@@ -183,8 +187,8 @@ async function deleteFragment(ownerId, id) {
     await s3Client.send(command);
   } catch (err) {
     const { Bucket, Key } = params;
-    logger.error({ err, Bucket, Key }, 'Error delete fragment data from S3');
-    throw new Error('unable to delete fragment data');
+    logger.error({ err, Bucket, Key }, 'Error streaming fragment data from S3');
+    throw new Error('unable to read fragment data');
   }
 
   // Configure our PUT params, with the name of the table and item (attributes and keys)
@@ -199,7 +203,7 @@ async function deleteFragment(ownerId, id) {
   try {
     return ddbDocClient.send(command2);
   } catch (err) {
-    logger.warn({ err, params2, fragment }, 'error delete fragment to DynamoDB');
+    logger.warn({ err, params2, fragment }, 'error writing fragment to DynamoDB');
     throw err;
   }
 }
