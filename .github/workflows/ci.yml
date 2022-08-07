@@ -59,11 +59,28 @@ jobs:
       - name: Install node dependencies and run Tests
         run: npm install-ci-test
 
+  integration-tests:
+    name: Integration Tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out code
+        uses: actions/checkout@v2
+      - name: Install Hurl
+        run: |
+          curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl_1.6.1_amd64.deb
+          sudo dpkg -i hurl_1.6.1_amd64.deb
+      - name: Build Containers
+        run: docker-compose -f docker-compose.offline.yml up -d
+      - name: Setup Local AWS Resources
+        run: ./scripts/local-aws-setup.sh
+      - name: Run Hurl Tests
+        run: npm run test:integration
+
   #docker-hub will help us to merge github and docker hub this will Automatically Build and Push  docker image to Docker Hub
   docker-hub:
     name: Build and Push to Docker Hub
     # Don't bother running this job unless the other four all pass
-    needs: [lint, dockerfile-lint, unit-tests]
+    needs: [lint, dockerfile-lint, unit-tests, integration-tests]
     runs-on: ubuntu-latest
     steps:
       # Set up buildx for optimal Docker Builds, see:
