@@ -85,7 +85,8 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    return readFragmentData(this.ownerId, this.id);
+    const result = readFragmentData(ownerId, id);
+    return result;
   }
 
   /**
