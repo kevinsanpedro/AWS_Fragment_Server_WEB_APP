@@ -73,7 +73,7 @@ jobs:
         run: docker-compose -f docker-compose.offline.yml up -d
       - name: Setup Local AWS Resources
         run: |
-          chmod +x ./scripts/local-aws-setup.sh
+          chmod 777 ./scripts/local-aws-setup.sh
           ./scripts/local-aws-setup.sh
       - name: Run Hurl Tests
         run: npm run test:integration
