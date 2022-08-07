@@ -63,7 +63,7 @@ jobs:
   docker-hub:
     name: Build and Push to Docker Hub
     # Don't bother running this job unless the other three all pass
-    needs: [lint, dockerfile-lint, unit-tests]
+    needs: [lint, dockerfile-lint, unit-tests, integration-tests]
     runs-on: ubuntu-latest
     steps:
       # Set up buildx for optimal Docker Builds, see:
@@ -96,3 +96,20 @@ jobs:
           push: true
           # Use 3 tags :sha-sha-7d821bd14e0d6c381dc57a5369ae1a3a9220664f, :main, and :latest
           tags: ${{ env.DOCKERHUB_REPO }}:${{ env.SHA_TAG }}, ${{ env.DOCKERHUB_REPO }}:main, ${{ env.DOCKERHUB_REPO }}:latest
+
+      integration-tests:
+        name: Integration Tests
+        runs-on: ubuntu-latest
+        steps:
+          - name: Check out code
+            uses: actions/checkout@v2
+          - name: Install Hurl
+            run: |
+              curl -LO https://github.com/Orange-OpenSource/hurl/releases/download/1.6.1/hurl_1.6.1_amd64.deb
+              sudo dpkg -i hurl_1.6.1_amd64.deb
+          - name: Build Containers
+            run: docker-compose -f docker-compose.offline.yml up -d
+          - name: Setup Local AWS Resources
+            run: ./scripts/local-aws-setup.sh
+          - name: Run Hurl Tests
+            run: npm run test:integration
