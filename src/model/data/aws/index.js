@@ -187,23 +187,24 @@ async function deleteFragment(ownerId, id) {
     await s3Client.send(command);
   } catch (err) {
     const { Bucket, Key } = params;
-    logger.error({ err, Bucket, Key }, 'Error streaming fragment data from S3');
-    throw new Error('unable to read fragment data');
+    logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
+    throw new Error('unable to delete fragment data');
   }
 
   // Configure our PUT params, with the name of the table and item (attributes and keys)
   const params2 = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Item: fragment,
+    Key: `${ownerId}/${id}`,
   };
 
   // Create a PUT command to send to DynamoDB
   const command2 = new DeleteCommand(params2);
 
   try {
-    return ddbDocClient.send(command2);
+    await ddbDocClient.send(command2);
   } catch (err) {
-    logger.warn({ err, params2, fragment }, 'error writing fragment to DynamoDB');
+    const { Bucket, Key } = params;
+    logger.error({ err, Bucket, Key }, 'Error deleting fragment data from dynamodb');
     throw err;
   }
 }
