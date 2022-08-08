@@ -124,7 +124,7 @@ async function readFragmentData(ownerId, id) {
     // Get the object from the Amazon S3 bucket. It is returned as a ReadableStream.
     const data = await s3Client.send(command);
     // Convert the ReadableStream to a Buffer
-    return streamToBuffer(data.Body);
+    return data;
   } catch (err) {
     const { Bucket, Key } = params;
     logger.error({ err, Bucket, Key }, 'Error streaming fragment data from S3');
@@ -174,13 +174,13 @@ async function listFragments(ownerId, expand = false) {
 
 // Delete a fragment's metadata and data from memory db. Returns a Promise
 async function deleteFragment(ownerId, id) {
-  // Create the PUT API params from our details
+  // Create the delete API params from our details
   const params = {
     Bucket: process.env.AWS_S3_BUCKET_NAME,
     // Our key will be a mix of the ownerID and fragment id, written as a path
     Key: `${ownerId}/${id}`,
   };
-  // Configure our PUT params, with the name of the table and item (attributes and keys)
+  // Configure our delete params, with the name of the table and item (attributes and keys)
   const params2 = {
     TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
     Key: { ownerId, id },
@@ -189,9 +189,8 @@ async function deleteFragment(ownerId, id) {
   const command2 = new DeleteCommand(params2);
   try {
     // Create a Delete Object command to send to S3
-    const data1 = await s3Client.send(command);
-    const data2 = await ddbDocClient.send(command2);
-    return data1;
+    await s3Client.send(command);
+    await ddbDocClient.send(command2);
   } catch (err) {
     const { Bucket, Key } = params;
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
