@@ -189,8 +189,9 @@ async function deleteFragment(ownerId, id) {
   const command2 = new DeleteCommand(params2);
   try {
     // Create a Delete Object command to send to S3
-    await s3Client.send(command);
-    await ddbDocClient.send(command2);
+    const data1 = await s3Client.send(command);
+    const data2 = await ddbDocClient.send(command2);
+    return data1;
   } catch (err) {
     const { Bucket, Key } = params;
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
