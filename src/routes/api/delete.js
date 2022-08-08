@@ -7,6 +7,6 @@ module.exports = async (req, res) => {
 
     res.status(200).send(createSuccessResponse({ status: 'ok' }));
   } catch (err) {
-    res.status(404).send(createErrorResponse(404, err));
+    res.status(404).send(createErrorResponse(404, err.message));
   }
 };
