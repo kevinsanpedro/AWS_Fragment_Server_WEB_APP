@@ -198,7 +198,7 @@ async function deleteFragment(ownerId, id) {
   } catch (err) {
     const { Bucket, Key } = params;
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
-    throw new Error('unable to delete fragment data');
+    throw new Error('unable to delete fragment data', err);
   }
 }
 
