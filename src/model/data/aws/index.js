@@ -11,15 +11,6 @@ const { PutObjectCommand, GetObjectCommand, DeleteObjectCommand } = require('@aw
 const { PutCommand, GetCommand, QueryCommand, DeleteCommand } = require('@aws-sdk/lib-dynamodb');
 const logger = require('../../../logger');
 
-// Create two in-memory databases: one for fragment metadata and the other for raw data
-const data = new MemoryDB();
-const metadata = new MemoryDB();
-
-// // Write a fragment's metadata to memory db. Returns a Promise
-// function writeFragment(fragment) {
-//   return metadata.put(fragment.ownerId, fragment.id, fragment);
-// }
-// Writes a fragment to DynamoDB. Returns a Promise.
 function writeFragment(fragment) {
   // Configure our PUT params, with the name of the table and item (attributes and keys)
   const params = {
@@ -131,7 +122,6 @@ async function readFragmentData(ownerId, id) {
     throw new Error('unable to read fragment data');
   }
 }
-
 // Get a list of fragments, either ids-only, or full Objects, for the given user.
 // Returns a Promise<Array<Fragment>|Array<string>|undefined>
 async function listFragments(ownerId, expand = false) {
