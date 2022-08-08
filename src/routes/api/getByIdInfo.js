@@ -11,6 +11,6 @@ module.exports = async (req, res) => {
       res.status(200).send(createSuccessResponse({ fragment: fragment }));
     }
   } catch (err) {
-    res.status(404).send(createErrorResponse(404, 'page not found'));
+    res.status(404).send(createErrorResponse(404, err));
   }
 };

@@ -180,10 +180,20 @@ async function deleteFragment(ownerId, id) {
     // Our key will be a mix of the ownerID and fragment id, written as a path
     Key: `${ownerId}/${id}`,
   };
+  // Configure our PUT params, with the name of the table and item (attributes and keys)
+  const params2 = {
+    TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
+    Key: `${ownerId}/${id}`,
+  };
+
   // Create a Delete Object command to send to S3
   const command = new DeleteObjectCommand(params);
+  
+  // Create a Delete command to send to DynamoDB
+  const command2 = new DeleteCommand(params2);
 
   try {
+    await ddbDocClient.send(command2);
     await s3Client.send(command);
   } catch (err) {
     const { Bucket, Key } = params;
@@ -191,23 +201,8 @@ async function deleteFragment(ownerId, id) {
     throw new Error('unable to delete fragment data');
   }
 
-  // Configure our PUT params, with the name of the table and item (attributes and keys)
-  const params2 = {
-    TableName: process.env.AWS_DYNAMODB_TABLE_NAME,
-    Key: `${ownerId}/${id}`,
-  };
 
-  // Create a PUT command to send to DynamoDB
-  const command2 = new DeleteCommand(params2);
 
-  try {
-    await ddbDocClient.send(command2);
-  } catch (err) {
-    const { Bucket, Key } = params;
-    logger.error({ err, Bucket, Key }, 'Error deleting fragment data from dynamodb');
-    throw err;
-  }
-}
 
 module.exports.listFragments = listFragments;
 module.exports.writeFragment = writeFragment;
