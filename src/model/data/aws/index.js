@@ -188,7 +188,7 @@ async function deleteFragment(ownerId, id) {
 
   // Create a Delete Object command to send to S3
   const command = new DeleteObjectCommand(params);
-  
+
   // Create a Delete command to send to DynamoDB
   const command2 = new DeleteCommand(params2);
 
@@ -200,9 +200,7 @@ async function deleteFragment(ownerId, id) {
     logger.error({ err, Bucket, Key }, 'Error deleting fragment data from S3');
     throw new Error('unable to delete fragment data');
   }
-
-
-
+}
 
 module.exports.listFragments = listFragments;
 module.exports.writeFragment = writeFragment;
