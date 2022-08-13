@@ -6,15 +6,15 @@ const { Fragment } = require('../../model/fragment');
 const path = require('node:path');
 const MarkdownIt = require('markdown-it'),
   md = new MarkdownIt();
-
+let fragment, result;
 module.exports = async (req, res) => {
   const convertExt = path.extname(req.params.id); //return .html, .txt
   const fragmentId = path.basename(req.params.id, convertExt); // return fragmentId
 
   try {
     //get the meta fragment and fragment data return buffer(raw data)
-    let fragment = await Fragment.byId(req.user, fragmentId);
-    let result = await fragment.getData();
+    fragment = await Fragment.byId(req.user, fragmentId);
+    result = await fragment.getData();
 
     //if no extension,
     //replace the header content type to current fragment content type
