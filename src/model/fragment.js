@@ -85,17 +85,7 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   getData() {
-    try {
-      return new Promise((resolve, reject) => {
-        readFragmentData(this.ownerId, this.id)
-          .then((data) => resolve(Buffer.from(data)))
-          .catch((error) => {
-            reject(new Error(error));
-          });
-      });
-    } catch (err) {
-      throw new Error(err);
-    }
+    return readFragmentData(this.ownerId, this.id);
   }
 
   /**
