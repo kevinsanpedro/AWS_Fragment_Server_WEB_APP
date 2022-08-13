@@ -11,11 +11,10 @@ module.exports = async (req, res) => {
   const convertExt = path.extname(req.params.id); //return .html, .txt
   const fragmentId = path.basename(req.params.id, convertExt); // return fragmentId
 
-  //get the meta fragment and fragment data return buffer(raw data)
-  let fragment = await Fragment.byId(req.user, fragmentId);
-  let result = await fragment.getData();
-
   try {
+    //get the meta fragment and fragment data return buffer(raw data)
+    let fragment = await Fragment.byId(req.user, fragmentId);
+    let result = await fragment.getData();
     //if no extension,
     //replace the header content type to current fragment content type
     //then response with original fragment data
