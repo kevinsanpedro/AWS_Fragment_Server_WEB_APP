@@ -85,8 +85,13 @@ class Fragment {
    * @returns Promise<Buffer>
    */
   async getData() {
-    let result = await readFragmentData(this.ownerId, this.id);
-    return result;
+    try {
+      let result = await readFragmentData(this.ownerId, this.id);
+      return result;
+    } catch (error) {
+      return error;
+      //throw new Error('unable to read fragment data');
+    }
   }
 
   /**
