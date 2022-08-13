@@ -65,7 +65,7 @@ module.exports = async (req, res) => {
       res.status(404).send(createErrorResponse(404, 'Page not found' + Error.message));
     } else {
       //If the id does not represent a known fragment, returns an HTTP 404 with an appropriate error message.
-      res.status(500).send(createErrorResponse(415, Error.message));
+      res.status(500).send(createErrorResponse(500, Error.message));
     }
   }
 };
