@@ -7,7 +7,6 @@ const authorize = require('./authorize-middleware');
 // Configure HTTP Basic Auth strategy for Passport, see:
 // https://github.com/http-auth/http-auth-passport
 const auth = require('http-auth');
-//const passport = require('passport'); not use, can delete later
 const authPassport = require('http-auth-passport');
 
 // We expect HTPASSWD_FILE to be defined.

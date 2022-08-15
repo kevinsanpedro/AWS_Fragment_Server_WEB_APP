@@ -156,6 +156,9 @@ class Fragment {
       `text/html`,
       'text/markdown',
       'application/json',
+      'image/png',
+      'image/jpeg',
+      'image/webp',
     ];
     return validTypes.includes(value);
   }
