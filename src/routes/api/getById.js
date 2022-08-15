@@ -14,6 +14,11 @@ module.exports = async (req, res) => {
   try {
     //get the meta fragment and fragment data return buffer(raw data)
     let fragment = await Fragment.byId(req.user, fragmentId);
+
+    //Rehydrating an object fragment return a serialize object and removing its function,
+    //and if we try to use fragment function (e.g. getdata it will show getData() is not a function ) to fix this error we need
+    //to rehydrate a fragment by creating a temp fragment using a constructor
+
     const tempFrag = new Fragment({
       id: fragment.id,
       ownerId: fragment.ownerId,
@@ -21,42 +26,39 @@ module.exports = async (req, res) => {
       size: fragment.size,
     });
 
-    console.log(
-      'asdasd' + fragment.id + '\n' + fragment.ownerId + '\n' + fragment.size + '\n' + fragment.type
-    );
     let result = await tempFrag.getData();
 
     //if no extension,
     //replace the header content type to current fragment content type
     //then response with original fragment data
     if (!convertExt) {
-      res.set('Content-type', fragment.mimeType).status(200).send(result);
+      res.set('Content-type', tempFrag.mimeType).status(200).send(result);
     } else if (convertExt) {
       // - if all mimetype start with text, and app/json can use .txt to convert to plain/text
       // - set fragment type to text/plain
       // - response with status 200, and set header to current fragment type
       if (
-        (fragment.mimeType.startsWith('text/') && convertExt === '.txt') ||
+        (tempFrag.mimeType.startsWith('text/') && convertExt === '.txt') ||
         (fragment.mimeType === 'application/json' && convertExt === '.txt')
       ) {
-        fragment.type = 'text/plain';
-        res.set('Content-type', fragment.mimeType).status(200).send(result);
+        tempFrag.type = 'text/plain';
+        res.set('Content-type', tempFrag.mimeType).status(200).send(result);
       }
       //- else if markdown to md. send back original fragment, no change or
       //- html to html send back fragment no change or
       //- application/json to .json, send back original fragment no change or
       else if (
-        (fragment.mimeType === 'text/markdown' && convertExt === '.md') ||
-        (fragment.mimeType === 'text/html' && convertExt === '.html') ||
-        (fragment.mimeType === 'application/json' && convertExt === '.json')
+        (tempFrag.mimeType === 'text/markdown' && convertExt === '.md') ||
+        (tempFrag.mimeType === 'text/html' && convertExt === '.html') ||
+        (tempFrag.mimeType === 'application/json' && convertExt === '.json')
       ) {
-        res.set('Content-type', fragment.mimeType).status(200).send(result);
+        res.set('Content-type', tempFrag.mimeType).status(200).send(result);
       }
       //else if markdown to html
-      else if (fragment.mimeType === 'text/markdown' && convertExt === '.html') {
-        fragment.type = 'text/html';
+      else if (tempFrag.mimeType === 'text/markdown' && convertExt === '.html') {
+        tempFrag.type = 'text/html';
         res
-          .set('Content-type', fragment.mimeType)
+          .set('Content-type', tempFrag.mimeType)
           .status(200)
           .send(md.render(`# ${result}`));
       }
@@ -72,7 +74,6 @@ module.exports = async (req, res) => {
     //For example, a plain text fragment cannot be returned as a PNG.
     if (Error.message) {
       res.status(415).send(createErrorResponse(415, Error.message));
-      console.log('asdasd' + Error.message);
     } else {
       //If the id does not represent a known fragment, returns an HTTP 404 with an appropriate error message.
       res.status(404).send(createErrorResponse(404, 'Page not found'));
