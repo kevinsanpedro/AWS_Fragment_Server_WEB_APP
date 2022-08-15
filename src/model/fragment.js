@@ -159,6 +159,7 @@ class Fragment {
       'image/png',
       'image/jpeg',
       'image/webp',
+      'image/gif',
     ];
     return validTypes.includes(value);
   }
