@@ -14,8 +14,16 @@ module.exports = async (req, res) => {
   try {
     //get the meta fragment and fragment data return buffer(raw data)
     let fragment = await Fragment.byId(req.user, fragmentId);
-    const tempFrag = new Fragment({ ownerId: fragment.ownerId, type: fragment.type, size: 0 });
+    const tempFrag = new Fragment({
+      id: fragment.id,
+      ownerId: fragment.ownerId,
+      type: fragment.type,
+      size: fragment.size,
+    });
 
+    console.log(
+      'asdasd' + fragment.id + '\n' + fragment.ownerId + '\n' + fragment.size + '\n' + fragment.type
+    );
     let result = await tempFrag.getData();
 
     //if no extension,
