@@ -14,7 +14,10 @@ module.exports = async (req, res) => {
   try {
     //get the meta fragment and fragment data return buffer(raw data)
     let fragment = await Fragment.byId(req.user, fragmentId);
-    let result = await fragment.getData();
+    const fragment2 = await Fragment.byId(req.user, fragment.id);
+
+    let result = await fragment2.getData();
+
     //if no extension,
     //replace the header content type to current fragment content type
     //then response with original fragment data
@@ -59,13 +62,12 @@ module.exports = async (req, res) => {
     // or if the fragment cannot be converted to this type,
     //an HTTP 415 error is returned instead, with an appropriate message.
     //For example, a plain text fragment cannot be returned as a PNG.
-    if (Error.message === 'Unsuported type') {
+    if (Error.message) {
       res.status(415).send(createErrorResponse(415, Error.message));
-    } else if (Error.message == 'Page not found') {
-      res.status(404).send(createErrorResponse(404, 'Page not found' + Error.message));
+      console.log('asdasd' + Error.message);
     } else {
       //If the id does not represent a known fragment, returns an HTTP 404 with an appropriate error message.
-      res.status(500).send(createErrorResponse(500, Error.message));
+      res.status(404).send(createErrorResponse(404, 'Page not found'));
     }
   }
 };
