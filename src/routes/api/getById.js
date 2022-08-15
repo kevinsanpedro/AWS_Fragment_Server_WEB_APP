@@ -14,9 +14,9 @@ module.exports = async (req, res) => {
   try {
     //get the meta fragment and fragment data return buffer(raw data)
     let fragment = await Fragment.byId(req.user, fragmentId);
-    const fragment2 = await Fragment.byId(req.user, fragment.id);
+    const tempFrag = new Fragment({ ownerId: fragment.ownerId, type: fragment.type, size: 0 });
 
-    let result = await fragment2.getData();
+    let result = await tempFrag.getData();
 
     //if no extension,
     //replace the header content type to current fragment content type
