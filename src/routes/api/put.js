@@ -20,7 +20,10 @@ module.exports = async (req, res) => {
       res
         .status(400)
         .send(
-          createErrorResponse(400, 'content type must be the same from previous fragment data type')
+          createErrorResponse(
+            400,
+            'content type must be the same from previous fragment data type ' + err.message
+          )
         );
     } else {
       res.status(404).send(createErrorResponse(404, 'fragment not found'));
