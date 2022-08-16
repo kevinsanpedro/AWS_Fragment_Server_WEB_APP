@@ -129,17 +129,19 @@ class Fragment {
     // -if markdown return plain, html and markdown
     if (this.type.includes('plain')) {
       mimeArray.push(this.mimeType);
-    }
-    if (this.type.includes('html')) {
+    } else if (this.type.includes('html')) {
       mimeArray.push('text/plain');
       mimeArray.push(this.mimeType);
-    }
-    if (this.type.includes('markdown')) {
+    } else if (this.type.includes('markdown')) {
       mimeArray.push('text/plain');
       mimeArray.push('text/html');
       mimeArray.push(this.mimeType);
+    } else if (this.type.includes('image')) {
+      mimeArray.push('image/png');
+      mimeArray.push('image/jpeg');
+      mimeArray.push('image/webp');
+      mimeArray.push('image/gif');
     }
-
     return mimeArray;
   }
 

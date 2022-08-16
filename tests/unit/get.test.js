@@ -76,6 +76,52 @@ describe('GET /v1/fragments', () => {
     expect(result.statusCode).toBe(200);
   });
 
+  test('delete a fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .delete(`/v1/fragments/${res.body.fragment.id}`)
+      .auth('user1@email.com', 'password1');
+
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('update a fragment a fragment', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .put(`/v1/fragments/${res.body.fragment.id}`)
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    expect(result.statusCode).toBe(200);
+  });
+
+  test('update a fragment with wrong text', async () => {
+    const res = await request(app)
+      .post('/v1/fragments')
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/markdown')
+      .send('This is a fragment');
+
+    const result = await request(app)
+      .put(`/v1/fragments/${res.body.fragment.id}`)
+      .auth('user1@email.com', 'password1')
+      .set('Content-Type', 'text/plain')
+      .send('This is a fragment');
+
+    expect(result.statusCode).toBe(400);
+  });
+
   test('convert json to text/plain', async () => {
     const res = await request(app)
       .post('/v1/fragments')

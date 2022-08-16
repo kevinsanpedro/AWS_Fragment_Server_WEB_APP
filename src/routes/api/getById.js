@@ -7,6 +7,8 @@ const path = require('node:path');
 const MarkdownIt = require('markdown-it'),
   md = new MarkdownIt();
 
+//const sharp = require('sharp');
+
 module.exports = async (req, res) => {
   const convertExt = path.extname(req.params.id); //return .html, .txt
   const fragmentId = path.basename(req.params.id, convertExt); // return fragmentId
@@ -15,9 +17,9 @@ module.exports = async (req, res) => {
     //get the meta fragment and fragment data return buffer(raw data)
     let fragment = await Fragment.byId(req.user, fragmentId);
 
-    //Rehydrating an object fragment return a serialize object and removing its function,
-    //and if we try to use fragment function (e.g. getdata it will show getData() is not a function ) to fix this error we need
-    //to rehydrate a fragment by creating a temp fragment using a constructor
+    //fragment return serialize obj, in order to fix I create a temporary constructor using the
+    //serialize fragment I got from dynamodb then use this temp
+    //to act as a "rehydrated" object that will allow me to access all the function.
 
     const tempFrag = new Fragment({
       id: fragment.id,
@@ -28,19 +30,29 @@ module.exports = async (req, res) => {
 
     let result = await tempFrag.getData();
 
+    //Rehydrating an object fragment return a serialize object and removing its function,
+    //and if we try to use fragment function (e.g. getdata it will show getData() is not a function ) to fix this error we need
+    //to rehydrate a fragment by creating a temp fragment using a constructor
+
     //if no extension,
     //replace the header content type to current fragment content type
     //then response with original fragment data
     if (!convertExt) {
       res.set('Content-type', tempFrag.mimeType).status(200).send(result);
     } else if (convertExt) {
-      // - if all mimetype start with text, and app/json can use .txt to convert to plain/text
-      // - set fragment type to text/plain
-      // - response with status 200, and set header to current fragment type
+      //image conversion
+      //if mimetype is image, and convert is a present
+      // if (tempFrag.mimeType.startsWith('image') && convertExt) {
+      //   const result1 = sharp(result).toFile(req.params.id);
+      //   res.set('Content-type', tempFrag.mimeType).status(200).send(result1);
+      // }
       if (
         (tempFrag.mimeType.startsWith('text/') && convertExt === '.txt') ||
         (fragment.mimeType === 'application/json' && convertExt === '.txt')
       ) {
+        // - if all mimetype start with text, and app/json can use .txt to convert to plain/text
+        // - set fragment type to text/plain
+        // - response with status 200, and set header to current fragment type
         tempFrag.type = 'text/plain';
         res.set('Content-type', tempFrag.mimeType).status(200).send(result);
       }
@@ -61,9 +73,7 @@ module.exports = async (req, res) => {
           .set('Content-type', tempFrag.mimeType)
           .status(200)
           .send(md.render(`# ${result}`));
-      }
-      //else no conversion found throw an error
-      else {
+      } else {
         throw new Error('Unsupported type');
       }
     }
