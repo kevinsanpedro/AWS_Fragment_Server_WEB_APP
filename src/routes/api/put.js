@@ -4,15 +4,17 @@ const { createErrorResponse, createSuccessResponse } = require('../../response')
 module.exports = async (req, res) => {
   try {
     const fragments = await Fragment.byId(req.user, req.params.id);
-    if (fragments.mimeType !== req.get('Content-Type')) {
-      throw new Error('wrong type');
-    }
+
     const tempFrag = new Fragment({
       id: fragments.id,
       ownerId: fragments.ownerId,
       type: fragments.type,
       size: fragments.size,
     });
+
+    if (tempFrag.mimeType !== req.get('Content-Type')) {
+      throw new Error('wrong type');
+    }
     await tempFrag.setData(req.body);
     res.status(200).send(createSuccessResponse({ tempFrag }));
   } catch (err) {
