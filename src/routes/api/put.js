@@ -5,18 +5,18 @@ module.exports = async (req, res) => {
   try {
     const fragments = await Fragment.byId(req.user, req.params.id);
 
-    const tempFrag = new Fragment({
+    const updated_fragment = new Fragment({
       id: fragments.id,
       ownerId: fragments.ownerId,
       type: fragments.type,
       size: fragments.size,
     });
 
-    if (tempFrag.mimeType !== req.get('Content-Type')) {
+    if (updated_fragment.mimeType !== req.get('Content-Type')) {
       throw new Error('wrong type');
     }
-    await tempFrag.setData(req.body);
-    res.status(200).send(createSuccessResponse({ tempFrag }));
+    await updated_fragment.setData(req.body);
+    res.status(200).send(createSuccessResponse({ updated_fragment }));
   } catch (err) {
     if (err) {
       res
@@ -24,7 +24,7 @@ module.exports = async (req, res) => {
         .send(
           createErrorResponse(
             400,
-            'content type must be the same from previous fragment data type ' + err.message
+            'content type must be the same from previous fragment data type '
           )
         );
     } else {
