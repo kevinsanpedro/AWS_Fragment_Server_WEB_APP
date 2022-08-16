@@ -7,8 +7,14 @@ module.exports = async (req, res) => {
     if (fragments.mimeType !== req.get('Content-Type')) {
       throw new Error('wrong type');
     }
-    await fragments.setData(req.body);
-    res.status(200).send(createSuccessResponse({ fragments }));
+    const tempFrag = new Fragment({
+      id: fragments.id,
+      ownerId: fragments.ownerId,
+      type: fragments.type,
+      size: fragments.size,
+    });
+    await tempFrag.setData(req.body);
+    res.status(200).send(createSuccessResponse({ tempFrag }));
   } catch (err) {
     if (err) {
       res
