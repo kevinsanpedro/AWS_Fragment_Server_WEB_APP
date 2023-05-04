@@ -34,4 +34,4 @@ Command to test in VS code<br/>
 - npm run test:watch - automatically rerun the code, whenever we save something in the file
 - npm run coverage - show complete table for test. describing the percentage of tests, and what line were run
 
-Elastic beanstalk url: http://fragments-env.eba-em73jqvw.us-east-1.elasticbeanstalk.com/
+
